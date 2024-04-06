@@ -32,7 +32,7 @@ app.post('/api/v1/admins/login', (req, res) => {
     try {
         res.status(201).json({
             status: 'success',
-            data: 'All Admins'
+            data: 'Admin Logged In'
         });
     } catch (error) {
         res.json({
@@ -92,7 +92,7 @@ app.delete('/api/v1/admins/:id', (req, res) => {
     try {
         res.status(201).json({
             status: 'success',
-            data: 'Admin has been updated successfully'
+            data: 'Admin has been Deleted successfully'
         });
     } catch (error) {
         res.json({
