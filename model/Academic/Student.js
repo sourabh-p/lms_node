@@ -43,6 +43,7 @@ const studentSchema = new mongoose.Schema(
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "ClassLevel",
+                required: true,
             },
         ],
         currentClassLevel: {
@@ -54,6 +55,7 @@ const studentSchema = new mongoose.Schema(
         academicYear: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "AcademicYear",
+            required: true,
         },
         dateAdmitted: {
             type: Date,
@@ -67,7 +69,8 @@ const studentSchema = new mongoose.Schema(
         ],
         program: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Program"
+            ref: "Program",
+            required: true,
         },
         isPromotedToLevel200: {
             type: Boolean,
@@ -96,18 +99,18 @@ const studentSchema = new mongoose.Schema(
         prefectName: {
             type: String,
         },
-        behaviorReport: [
-            {
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: "BehaviorReport",
-            },
-        ],
-        financialReport: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "FinancialReport",
-            },
-        ],
+        // behaviorReport: [
+        //     {
+        //         type: mongoose.Schema.Types.ObjectId, 
+        //         ref: "BehaviorReport",
+        //     },
+        // ],
+        // financialReport: [
+        //     {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         ref: "FinancialReport",
+        //     },
+        // ],`
         // year group
         yearGraduated: {
             type: String,
