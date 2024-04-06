@@ -1,4 +1,6 @@
 const http = require("http");
+require("./config/dbConnect"); // Database connection
+
 const app = require("./app/app");
 
 const PORT = process.env.PORT  || 2020;
