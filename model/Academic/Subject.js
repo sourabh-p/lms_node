@@ -14,16 +14,16 @@ const subjectSchema = new Schema(
     },
     teacher: {
       type: Schema.Types.ObjectId,
-      ref: "Teacher",
+      ref: "Teacher", // model
     },
     academicTerm: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicTerm",
+      ref: "AcademicTerm", // model
       required: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "Admin",
+      ref: "Admin", // model
       required: true,
     },
     duration: {
