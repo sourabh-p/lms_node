@@ -48,8 +48,65 @@ Subjects: Admin can manage the list of subjects that are taught in the instituti
 - Oversee staff employment processes, from recruitment to assigning roles within the school structure.
 - Define subjects, along with the curricula, and associate them with the appropriate year groups and programs.
 
-### Best Practices
+## Packages
 
-Ensure that all academic settings are aligned with the institution's curriculum and educational standards.
-Regularly update the academic terms and year groups to reflect changes in the school's operational calendar.
-Maintain accurate and up-to-date records of student admissions and staff employment to facilitate smooth operations within the system.
+This project uses the following main dependencies:
+
+- `dotenv`: For managing environment variables.
+- `express`: Fast, unopinionated, minimalist web framework for Node.js.
+- `mongoose`: MongoDB object modeling tool designed to work in an asynchronous environment.
+
+And the following development dependencies:
+
+- `morgan`: HTTP request logger middleware for Node.js.
+- `nodemon`: A utility that will monitor for any changes in your source and automatically restart your server.
+
+## Installation
+
+Before installing, make sure you have Node.js and npm (Node Package Manager) installed on your system. You can download them from [Node.js official website](https://nodejs.org/).
+
+1. Clone the repository to your local machine:
+
+`git clone https://your-repository-url/lms_system.git`
+`cd lms_system`
+
+1. Install the dependencies:
+`npm install`
+
+2. Running the Application
+To start the application, you can use the following npm scripts defined in the package.json:
+
+- To start the server with node:
+`npm start`
+
+- To start the server with nodemon for development (auto-restarts the server on file changes):
+`npm run server`
+
+## Setting up MongoDB
+To set up your MongoDB environment, you can either install MongoDB locally or use a MongoDB cloud service like MongoDB Atlas.
+
+### Local MongoDB Installation
+1. Download MongoDB from the MongoDB official website.
+2. Follow the installation instructions for your operating system.
+3. Ensure MongoDB is running on your system. Typically, MongoDB runs at mongodb://localhost:27017. The instance on this code runs on port 2020
+
+### Using MongoDB Atlas
+1. Create an account or log in at MongoDB Atlas.
+2. Follow the instructions to create a new cluster.
+3. Once your cluster is set up, create a database user, and whitelist your IP address.
+4. Connect your application to the cluster by copying the connection string provided by Atlas. Make sure to replace the <password> with your database user's password and <dbname> with the name of your database.
+
+### Configuring the Application
+Create a .env file in the root of your project and add your MongoDB URI:
+
+`MONGO_URI=your_mongodb_connection_string`
+
+Replace your_mongodb_connection_string with your actual connection string either from your local MongoDB installation or MongoDB Atlas.
+
+## Author
+Adam Lopez
+
+## License
+This project is licensed under the ISC License.
+
+This README section provides a comprehensive guide for potential contributors or users of your LMS System, including how to set it up, run it, and connect it with a MongoDB database. Adjustments can be made based on your specific repository URL or any additional steps you may require.
