@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const adminRouter = require('../routes/staff/adminRouter');
 
 const app  = express(); //  create application instance of express
 
@@ -13,19 +14,7 @@ app.use(morgan("dev"));
  */
 
 // Admin Register
-app.post('/api/v1/admins/register', (req, res) => {
-    try {
-        res.status(201).json({
-            status: 'success',
-            data: 'Admin has been registered successfully'
-        });
-    } catch (error) {
-        res.json({
-            status: "failed",
-            error: error.message
-        })
-    }
-});
+app.use('/api/v1/admins/register', adminRouter); // middleware
 
 // Admin Login
 app.post('/api/v1/admins/login', (req, res) => {
