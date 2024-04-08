@@ -65,10 +65,7 @@ And the following development dependencies:
 
 Before installing, make sure you have Node.js and npm (Node Package Manager) installed on your system. You can download them from [Node.js official website](https://nodejs.org/).
 
-1. Clone the repository to your local machine:
-
-`git clone https://your-repository-url/lms_system.git`
-`cd lms_system`
+1. Clone the repository to your local machine.
 
 1. Install the dependencies:
 `npm install`
