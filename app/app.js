@@ -7,11 +7,12 @@ const app  = express(); //  create application instance of express
 /**
  * Middleware
  */
-app.use('/api/v1/admins', adminRouter); // Admin middleware
+app.use(morgan("dev"));
+app.use(express.json()); // pass incoming json data
 
 /**
  * Routes
  */
-
+app.use('/api/v1/admins', adminRouter); // Admin middleware
 
 module.exports = app;
