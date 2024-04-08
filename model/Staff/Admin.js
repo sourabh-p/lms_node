@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 
-const mongoose = require("mongoose");
+const mongoose    = require("mongoose");
 const adminSchema = new mongoose.Schema(
   {
     name: {
