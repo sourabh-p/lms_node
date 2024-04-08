@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerAdminCtrl, loginAdminCtrl, getAdminsCtrl, getAdminCtrl, updateAdminCtrl, deleteAdminCtrl, adminSuspendTeacherCtrl, adminUnsuspendteacherCtrl, adminWithdrawTeacherCtrl, adminUnwithdrawTeacherCtrl, adminPublishResultsCtrl, adminUnpublishResultsCtrl } = require("../../controller/academics/adminCtrl");
+const { registerAdminCtrl, loginAdminCtrl, getAdminsCtrl, getAdminCtrl, updateAdminCtrl, deleteAdminCtrl, adminSuspendTeacherCtrl, adminUnsuspendteacherCtrl, adminWithdrawTeacherCtrl, adminUnwithdrawTeacherCtrl, adminPublishResultsCtrl, adminUnpublishResultsCtrl } = require("../../controller/staff/adminCtrl");
 
 const adminRouter = express.Router();
 
