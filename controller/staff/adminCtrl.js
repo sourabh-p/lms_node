@@ -1,17 +1,28 @@
-/**
- * Nameless exported functions 
- */
+const Admin = require("../../model/Staff/Admin");
 
 /**
  * @description Register admins
  * @route       GET /api/v1/admins/register
  * @access      Private
  */
-exports.registerAdminCtrl = (req, res) => {
+exports.registerAdminCtrl = async (req, res) => {
+    const { name, email, password } = req.body;
     try {
+        // Check if admin already exists in the database
+        const adminFound = await Admin.findOne({ email });
+        if (adminFound) {
+            res.json('Admin Exists');
+        }
+        // register user
+        const user = await Admin.create({
+            name,
+            email,
+            password
+        });
+
         res.status(201).json({
             status: 'success',
-            data: 'Admin has been registered successfully'
+            data: user
         });
     } catch (error) {
         res.json({
