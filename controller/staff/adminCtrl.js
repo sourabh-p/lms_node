@@ -11,6 +11,8 @@ exports.registerAdminCtrl = AsyncHandler( async (req, res) => {
 
     // Check if admin already exists in the database
     const adminFound = await Admin.findOne({ email });
+
+    if(adminFound) return res.status(401).json({ msg: "Email is already registered"});
     
     // register user
     const user = await Admin.create({
@@ -22,8 +24,7 @@ exports.registerAdminCtrl = AsyncHandler( async (req, res) => {
     res.status(201).json({
         status: 'success',
         data: user
-    });
-    
+    }); 
 });
 
 /**
@@ -43,6 +44,11 @@ exports.loginAdminCtrl = async (req, res) => {
         }
 
         if(user && await user.verifyPassword(password)) {
+            // save the user into req object
+            // because request is an object, 
+            // we can add the user object to it.
+            req.userAuth = user;
+
             return res.json({
                 data: user
             });
