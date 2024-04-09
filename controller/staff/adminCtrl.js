@@ -84,24 +84,22 @@ exports.getAdminsCtrl = (req, res) => {
     }
 };
 /**
- * @description Get Single Admin
- * @route       GET /api/v1/admins/:id
+ * @description Get Admin Profile
+ * @route       GET /api/v1/admins/profile
  * @access      Private
  */
-exports.getAdminCtrl = (req, res) => {
-    try {
-        console.log(req.userAuth);
-        res.status(201).json({
+exports.getAdminProfileCtrl = AsyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.userAuth._id).select('-password -createdAt -updatedAt');
+
+    if (!admin) {
+        throw new Error("Admin not found")
+    } else {
+        res.status(200).json({
             status: 'success',
-            data: 'Single Admin'
+            data: admin,
         });
-    } catch (error) {
-        res.json({
-            status: "failed",
-            error: error.message
-        })
     }
-};
+});
 /**
  * @description Update Admin
  * @route       UPDATE /api/v1/admins/:id
