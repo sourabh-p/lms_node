@@ -2,20 +2,29 @@ const Admin = require("../model/Staff/Admin");
 const verifyToken = require("../utils/verifyToken");
 
 const isLogin = async (req, res, next) => {
-    // get token from header
+    // get header objects
     const headerObj = req.headers;
-    const token     = headerObj.authorization.split(" ")[1];
+    /**
+     * If the headerObj is there,
+     * and has authorization attached,
+     * and the authorization can be split
+     * return the token from header
+     */
+    const token     = headerObj?.authorization?.split(" ")[1];// using optional chaining
+    // const token = headerObj && headerObj.authorization && headerObj.authorization.split(" ")[1]; // using optional chaining
+    // console.log(token, headerObj);
     //verify token
     const verifiedToken = verifyToken(token);
-    if(verifiedToken) {
+
+    if(verifiedToken.msg == "Invalid token") {
+        const err = new Error("Token expired/invalid");
+        next(err);
+    } else {
         // find the admin
         const user = await Admin.findById(verifiedToken.id).select('name email role');
         // save user into req.obj
         req.userAuth = user;
         next();
-    } else {
-        const err = new Error("Token expired/invalid");
-        next(err);
     }
     
 };
