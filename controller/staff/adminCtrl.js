@@ -25,7 +25,8 @@ exports.registerAdminCtrl = AsyncHandler(async (req, res) => {
 
     res.status(201).json({
         status: "success",
-        data: user
+        data: user,
+        message: "Admin registered successfully. Glad you are here.",
     }); 
 });
 
@@ -36,7 +37,7 @@ exports.registerAdminCtrl = AsyncHandler(async (req, res) => {
  */
 exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const user = await Admin.findOne({email})
+    const user                = await Admin.findOne({email})
 
     if(!user) {
         return res.json({
@@ -45,19 +46,10 @@ exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
     }
 
     if(user && (await user.verifyPassword(password))) {
-        // save the user into req object
-        const token = generateToken(user._id);
-
-        // if(token) {
-            const verifiedToken = verifyToken(token);
-
-            // console.log(verifiedToken);
-        // }
         // send user data as a token
         return res.json({
             data: generateToken(user._id),
-            user,
-            verifiedToken,
+            message: "Admin logged in successfully.  Welcome back!"
         });
     } else {
         return res.json({
@@ -97,6 +89,7 @@ exports.getAdminProfileCtrl = AsyncHandler(async (req, res) => {
         res.status(200).json({
             status: 'success',
             data: admin,
+            message: "Admin Profile fetched successfully"
         });
     }
 });
