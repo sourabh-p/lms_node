@@ -1,12 +1,14 @@
 const AsyncHandler = require("express-async-handler");
 const Admin = require("../../model/Staff/Admin");
+const generateToken = require("../../utils/generateToken");
+const verifyToken = require("../../utils/verifyToken");
 
 /**
  * @description Register admins
  * @route       GET /api/v1/admins/register
  * @access      Private
  */
-exports.registerAdminCtrl = AsyncHandler( async (req, res) => {
+exports.registerAdminCtrl = AsyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
     // Check if admin already exists in the database
@@ -22,7 +24,7 @@ exports.registerAdminCtrl = AsyncHandler( async (req, res) => {
     });
 
     res.status(201).json({
-        status: 'success',
+        status: "success",
         data: user
     }); 
 });
@@ -32,38 +34,37 @@ exports.registerAdminCtrl = AsyncHandler( async (req, res) => {
  * @route       POST /api/v1/admins/login
  * @access      Private
  */
-exports.loginAdminCtrl = async (req, res) => {
+exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    try {
-        const user = await Admin.findOne({email})
+    const user = await Admin.findOne({email})
 
-        if(!user) {
-            return res.json({
-                message: "Invalid login credentials"
-            });
-        }
-
-        if(user && await user.verifyPassword(password)) {
-            // save the user into req object
-            // because request is an object, 
-            // we can add the user object to it.
-            req.userAuth = user;
-
-            return res.json({
-                data: user
-            });
-        } else {
-            return res.json({
-                message: "Invalid login credentials"
-            });
-        }
-    } catch (error) {
-        res.json({
-            status: "failed",
-            error: error.message
-        })
+    if(!user) {
+        return res.json({
+            message: "Invalid login credentials. Please try again."
+        });
     }
-};
+
+    if(user && (await user.verifyPassword(password))) {
+        // save the user into req object
+        const token = generateToken(user._id);
+
+        // if(token) {
+            const verifiedToken = verifyToken(token);
+
+            // console.log(verifiedToken);
+        // }
+        // send user data as a token
+        return res.json({
+            data: generateToken(user._id),
+            user,
+            verifiedToken,
+        });
+    } else {
+        return res.json({
+            message: "Invalid login credentials"
+        });
+    }
+});
 /**
  * @description Get all admins
  * @route       GET /api/v1/admins
@@ -83,23 +84,22 @@ exports.getAdminsCtrl = (req, res) => {
     }
 };
 /**
- * @description Get Single Admin
- * @route       GET /api/v1/admins/:id
+ * @description Get Admin Profile
+ * @route       GET /api/v1/admins/profile
  * @access      Private
  */
-exports.getAdminCtrl = (req, res) => {
-    try {
-        res.status(201).json({
+exports.getAdminProfileCtrl = AsyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.userAuth._id).select('-password -createdAt -updatedAt');
+
+    if (!admin) {
+        throw new Error("Admin not found")
+    } else {
+        res.status(200).json({
             status: 'success',
-            data: 'Single Admin'
+            data: admin,
         });
-    } catch (error) {
-        res.json({
-            status: "failed",
-            error: error.message
-        })
     }
-};
+});
 /**
  * @description Update Admin
  * @route       UPDATE /api/v1/admins/:id
