@@ -30,7 +30,7 @@ adminRouter.post("/login", loginAdminCtrl);
 /**
  * Get All Admin
  */
-adminRouter.get("/", getAdminsCtrl);
+adminRouter.get("/", isLogin, getAdminsCtrl);
 
 /**
  * Single Admin
