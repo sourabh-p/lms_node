@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../../model/Staff/Admin");
 const generateToken = require("../../utils/generateToken");
 const verifyToken = require("../../utils/verifyToken");
+const { hashPassword, isPassMatched } = require("../../utils/helpers");
 
 /**
  * @description Register admins
@@ -16,16 +17,12 @@ exports.registerAdminCtrl = AsyncHandler(async (req, res) => {
     const adminFound = await Admin.findOne({ email });
 
     if(adminFound) return res.status(401).json({ msg: "Email is already registered"});
-    
-    // generate salt then hash the password
-    const salt    = await bcrypt.genSalt(10);
-    const passwordHashed = await bcrypt.hash(password, salt);
 
     // register user
     const user = await Admin.create({
         name,
         email,
-        password: passwordHashed
+        password: await hashPassword(password)
     });
 
     res.status(201).json({
@@ -51,7 +48,7 @@ exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
     }
 
     // verify password
-    const isMatched = await bcrypt.compare(password, user.password);
+    const isMatched = await isPassMatched(password, user.password);
 
     if (!isMatched) {
         return res.json({
@@ -109,15 +106,14 @@ exports.updateAdminCtrl = AsyncHandler(async (req, res) => {
     }
 
     // generate salt then hash the password
-    const salt    = await bcrypt.genSalt(10);
-    const passwordHashed = await bcrypt.hash(password, salt);
+    
 
     // check if user is updating password
     if(password){
         // update user
         const admin = await Admin.findByIdAndUpdate(req.userAuth._id, {
             email,
-            password: passwordHashed,
+            password: await hashPassword(password),
             name,
         }, {
             new: true,
