@@ -64,7 +64,7 @@ exports.getAcademicYear = AsyncHandler(async (req, res) => {
 
 /**
  * @description Update Academic Year
- * @route GET /api/admins/academic-years/:id
+ * @route PUT /api/admins/academic-years/:id
  * @access Private
  */
 exports.updateAcademicYear = AsyncHandler(async (req, res) => {
@@ -90,5 +90,19 @@ exports.updateAcademicYear = AsyncHandler(async (req, res) => {
         status: "success",
         message: "Academic years updated successfully",
         data: academicYear,
-    })
+    });
+});
+
+/**
+ * @description Delete Academic Year
+ * @route GET /api/admins/academic-years/:id
+ * @access Private
+ */
+exports.deleteAcademicYear = AsyncHandler(async (req, res) => {
+    await AcademicYear.findByIdAndDelete(req.params.id);
+
+    res.status(201).json({
+        status: "success",
+        message: "Academic years deleted successfully",
+    });
 });
