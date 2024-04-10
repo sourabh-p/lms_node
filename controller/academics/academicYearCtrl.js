@@ -2,6 +2,12 @@ const AsyncHandler = require("express-async-handler");
 const AcademicYear = require("../../model/Academic/AcademicYear");
 const Admin        = require("../../model/Staff/Admin");
 
+
+/**
+ * @description Create Academic Year
+ * @route POST /api/admins/academic-years
+ * @access Private
+ */
 exports.createAcademicYear = AsyncHandler(async (req, res) => {
     const { name, fromYear, toYear  } = req.body;
     // cehck if the year exists
@@ -25,11 +31,13 @@ exports.createAcademicYear = AsyncHandler(async (req, res) => {
 
 });
 
+/**
+ * @description Get All Academic Years
+ * @route GET /api/admins/academic-years
+ * @access Private
+ */
 exports.getAcademicYears = AsyncHandler(async (req, res) => {
     const academicYears = await AcademicYear.find();
-    if(academicYears){
-        throw new Error("Academic year already exists");
-    }
 
     res.status(201).json({
         status: 'success',
