@@ -46,3 +46,49 @@ exports.getAcademicYears = AsyncHandler(async (req, res) => {
     });
 
 });
+
+/**
+ * @description Get Single Academic Year
+ * @route GET /api/admins/academic-years/:id
+ * @access Private
+ */
+exports.getAcademicYear = AsyncHandler(async (req, res) => {
+    const academicYear = await AcademicYear.findById(req.params.id);
+
+    res.status(201).json({
+        status: "success",
+        message: "Academic year fetched successfully",
+        data: academicYear
+    });
+});
+
+/**
+ * @description Update Academic Year
+ * @route GET /api/admins/academic-years/:id
+ * @access Private
+ */
+exports.updateAcademicYear = AsyncHandler(async (req, res) => {
+    const { name, fromYear, toYear } = req.body;
+    const createAcademicYearFound    = await AcademicYear.findOne({name});
+
+    if(createAcademicYearFound){
+        throw new Error("Academic year already exists");
+    }
+    const academicYear = await  AcademicYear.findByIdAndUpdate(
+        req.params.id,
+        {
+            name,
+            fromYear,
+            toYear,
+            createdBy: req.userAuth._id,
+        }, {
+            new: true, // return updated user instead of original one
+        }
+    );
+
+    res.status(201).json({
+        status: "success",
+        message: "Academic years updated successfully",
+        data: academicYear,
+    })
+});
