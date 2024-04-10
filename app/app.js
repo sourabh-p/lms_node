@@ -2,6 +2,7 @@ const express     = require('express');
 const {globalErrHandler, notFoundErr} = require('../middlewares/globalErrHandler');
 
 const adminRouter = require('../routes/staff/adminRouter');
+const academicYearRouter = require('../routes/academics/academicYear');
 
 const app  = express(); //  create application instance of express
 
@@ -13,7 +14,8 @@ app.use(express.json()); // pass incoming json data
 /**
  * Routes
  */
-app.use("/api/v1/admins", adminRouter); // Admin middleware
+app.use("/api/v1/admins", adminRouter); // Admin routes
+app.use("/api/v1/academic-years", academicYearRouter); // academic year routes
 
 /**
  * Error Middlewares
