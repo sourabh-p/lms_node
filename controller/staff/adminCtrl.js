@@ -63,15 +63,6 @@ exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
             message: "Admin logged in successfully.  Welcome back!"
         });
     }
-
-    // if(user && (await user.verifyPassword(password))) {
-    //     // send user data as a token
-        
-    // } else {
-    //     return res.json({
-    //         message: "Invalid login credentials"
-    //     });
-    // }
 });
 /**
  * @description Get all admins
@@ -115,11 +106,18 @@ exports.updateAdminCtrl = AsyncHandler(async (req, res) => {
     const emailExists = await Admin.findOne({email});
     if(emailExists) {
         throw new Error("This email already exists");
-    } else {
+    }
+
+    // generate salt then hash the password
+    const salt    = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(password, salt);
+
+    // check if user is updating password
+    if(password){
         // update user
         const admin = await Admin.findByIdAndUpdate(req.userAuth._id, {
             email,
-            password,
+            password: passwordHashed,
             name,
         }, {
             new: true,
@@ -129,9 +127,22 @@ exports.updateAdminCtrl = AsyncHandler(async (req, res) => {
             success: "success",
             data: admin,
             message: "Admin profile updated successfully",
-        })
+        });
+    } else {
+        // update user email and name
+        const admin = await Admin.findByIdAndUpdate(req.userAuth._id, {
+            email,
+            name,
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({
+            success: "success",
+            data: admin,
+            message: "Admin profile updated successfully",
+        });
     }
-
 });
 /**
  * @description Delete Admin
