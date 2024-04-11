@@ -2,14 +2,13 @@ const AsyncHandler = require("express-async-handler");
 const AcademicYear = require("../../model/Academic/AcademicYear");
 const Admin        = require("../../model/Staff/Admin");
 
-
 /**
  * @description Create Academic Year
  * @route POST /api/admins/academic-years
  * @access Private
  */
 exports.createAcademicYear = AsyncHandler(async (req, res) => {
-    const { name, fromYear, toYear  } = req.body;
+    const { name, fromYear, toYear } = req.body;
     // cehck if the year exists
     const academicYear = await AcademicYear.findOne({name});
     if(academicYear){
@@ -21,7 +20,12 @@ exports.createAcademicYear = AsyncHandler(async (req, res) => {
         fromYear,
         toYear,
         createdBy: req.userAuth._id
-    })
+    });
+    // push academic year into Admin
+    const admin = await Admin.findById(req.userAuth._id);
+
+    admin.academicYear.push(academicYearCreated._id);
+    await admin.save();
 
     res.status(201).json({
         status: 'success',
