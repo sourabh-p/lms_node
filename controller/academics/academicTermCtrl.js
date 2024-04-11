@@ -99,7 +99,7 @@ exports.updateAcademicTerms = AsyncHandler(async (req, res) => {
 
 /**
  * @description Delete Academic Term
- * @route GET /api/admins/academic-terms/:id
+ * @route DELETE /api/admins/academic-terms/:id
  * @access Private
  */
 exports.deleteAcademicTerm = AsyncHandler(async (req, res) => {
