@@ -26,7 +26,7 @@ const academicYearRouter = express.Router();
 academicYearRouter
   .route("/")
   .post(isLogin, isAdmin, createAcademicYear)
-  .get(isLogin, isAdmin, getAcademicYear);
+  .get(isLogin, isAdmin, getAcademicYears);
 
 academicYearRouter
   .route("/:id")
