@@ -23,6 +23,14 @@ const adminSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicTerm",
     }],
+    programs: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Program",
+    }],
+    yearGroups: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "YearGroup",
+    }],
     academicYear: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicYear",
@@ -44,22 +52,6 @@ const adminSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-// // Hash Password
-// adminSchema.pre('save', async function(next) {
-//   if (!this.isModified('password')) {
-//     next();
-//   }
-//   // salt then hash the password
-//   const salt    = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
-
-// //verify Password
-// adminSchema.methods.verifyPassword = async function(enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
 
 //model
 const Admin = mongoose.model("Admin", adminSchema);

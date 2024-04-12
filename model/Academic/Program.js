@@ -21,18 +21,18 @@ const ProgramSchema = new Schema(
     //CSFTY
     code: {
       type: String,
-      default: () => {
+      default: function() { // Changed to a regular function
         return (
           this.name
             .split(" ")
-            .map(name => name[0])
+            .map(function(name) { return name[0]; })
             .join("")
             .toUpperCase() +
           Math.floor(10 + Math.random() * 90) +
           Math.floor(10 + Math.random() * 90)
         );
       },
-    },
+    },    
     createdBy: {
       type: Schema.Types.ObjectId, // mongoose referencing
       ref: "Admin", // model to reference
