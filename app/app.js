@@ -7,6 +7,7 @@ const academicTermRouter = require('../routes/academics/academicTerm');
 const classLevelRouter = require('../routes/academics/classLevel');
 const programRouter = require('../routes/academics/program');
 const subjectRouter = require('../routes/academics/subject');
+const yearGroupRouter = require('../routes/academics/yearGroup');
 
 const app  = express(); //  create application instance of express
 
@@ -24,6 +25,7 @@ app.use("/api/v1/academic-terms", academicTermRouter); // academic term routes
 app.use("/api/v1/class-levels", classLevelRouter); // Class level routes
 app.use("/api/v1/programs", programRouter); // Program routes
 app.use("/api/v1/subjects", subjectRouter); // Subject routes
+app.use("/api/v1/year-groups", yearGroupRouter); // Year Group routes
 /**
  * Error Middlewares
  */
