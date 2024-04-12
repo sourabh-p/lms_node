@@ -21,14 +21,14 @@ const teacherSchema = new mongoose.Schema(
     teacherId: {
       type: String,
       required: true,
-      default: () => {
+      default: function() {
         return (
           "TEA" +
           Math.floor(100 + Math.random() * 900) +
           Date.now().toString().slice(2, 4) +
           this.name
             .split(" ")
-            .map((name) => name[0])
+            .map(function(name) {return name[0]; })
             .join("")
             .toUpperCase()
         );
@@ -62,18 +62,18 @@ const teacherSchema = new mongoose.Schema(
     program: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Program",
-      required: true,
+      // required: true,
     },
     // A teacher can teach in more than one class level
     classLevel: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ClassLevel",
-      required: true,
+      // required: true,
     },
     academicYear: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicYear",
-      required: true,
+      // required: true,
     },
     examsCreated: [
       {
@@ -82,14 +82,14 @@ const teacherSchema = new mongoose.Schema(
       },
     ],
     createdBy: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
-      required: true,
+      // required: true,
     },
     academicTerm: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicTerm",
-      required: true,
+      // required: true,
     },
   },
   { timestamps: true }
