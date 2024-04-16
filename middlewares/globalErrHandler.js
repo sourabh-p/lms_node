@@ -9,7 +9,7 @@ const globalErrHandler = (err, req, res, next) => {
         status,
         message,
         stack,
-    })
+    });
 };
 // Not found
 const notFoundErr = (req, res, next) => {
