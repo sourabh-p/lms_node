@@ -55,7 +55,7 @@ const examSchema = new Schema({
   examType: {
     type: String,
     required: true,
-    default: "Quiz",
+    default: "quiz",
   },
   examStatus: {
     type: String,
