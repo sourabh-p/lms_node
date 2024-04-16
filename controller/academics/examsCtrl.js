@@ -17,8 +17,8 @@ exports.createExam = AsyncHandler(async (req, res) => {
     duration,
     examDate,
     examTime,
+    classLevel,
     examType,
-    createdBy,
     academicYear,
   } = req.body;
 
@@ -49,7 +49,7 @@ exports.createExam = AsyncHandler(async (req, res) => {
     examTime,
     examType,
     classLevel,
-    createdBy,
+    createdBy: req.userAuth?._id,
     subject,
     program,
   });
