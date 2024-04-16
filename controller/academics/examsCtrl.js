@@ -96,3 +96,68 @@ exports.getExam = AsyncHandler(async (req, res) => {
     data: exam,
   });
 });
+
+/**
+ * @description Update Exam
+ * @route PUT /api/admins/exams/:id
+ * @access Private Teacher Only
+ */
+exports.updateExam = AsyncHandler(async (req, res) => {
+  const {
+    name,
+    description,
+    subject,
+    program,
+    academicTerm,
+    duration,
+    examDate,
+    examTime,
+    classLevel,
+    examType,
+    academicYear,
+  } = req.body;
+  const examFound = await Exam.findOne({name});
+
+  if(examFound){
+      throw new Error("Exam already exists");
+  }
+  const examUpdated = await Exam.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        description,
+        subject,
+        program,
+        academicTerm,
+        duration,
+        examDate,
+        examTime,
+        classLevel,
+        examType,
+        academicYear,
+        createdBy: req.userAuth._id,
+      }, {
+          new: true, // return updated user instead of original one
+      }
+  );
+
+  res.status(201).json({
+      status: "success",
+      message: "Exam updated successfully",
+      data: examUpdated
+  });
+});
+
+/**
+ * @description Delete Exam
+ * @route DELETE /api/admins/exams/:id
+ * @access Private Teachers
+ */
+exports.deleteExam = AsyncHandler(async (req,res) =>{
+  await Exam.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({
+    status:"success",
+    message: "Exam Deleted Successfully"
+  });
+});
