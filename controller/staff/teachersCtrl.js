@@ -32,7 +32,7 @@ exports.adminRegisterTeacher = expressAsyncHandler(async (req, res) => {
 });
 
 /**
- * @description Login a Teacehr
+ * @description Login a Teacher
  * @route       POST /api/teachers/login
  * @access      Public
  */
@@ -63,7 +63,6 @@ exports.loginTeacher = expressAsyncHandler(async  (req, res)=>{
  * @route       GET /api/v1/admin/teachers
  * @access      Private admin only
  */
-
 exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
     const teachers = await Teacher.find();
     res.status(200).json({
@@ -71,4 +70,104 @@ exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
         message: "Teachers fetched successfully",
         data: teachers,
     });
+});
+
+/**
+ * @description Get Single a Teacher
+ * @route       POST /api/teachers/:teacherID/admin
+ * @access      Private admin only
+ */
+exports.getTeacherByAdmin = expressAsyncHandler(async(req, res) => {
+    const teacherID = req.params.teacherID;
+
+    console.log('Received teacherID:', teacherID);
+    try {
+        // Try to find the teacher by ID
+        const teacher = await Teacher.findById(teacherID);
+        
+        // Check if the teacher was found
+        if (!teacher) {
+            return res.status(404).json({
+                status: "error",
+                message: "Teacher not found"
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Teacher fetched successfully",
+            data: teacher
+        });
+    } catch (error) {
+        // If an error occurs (e.g., CastError for invalid ObjectId)
+        res.status(400).json({
+            status: "error",
+            message: "Invalid teacher ID format",
+            error: error.message // Optional: provide error message for debugging
+        });
+    }
+});
+
+/**
+ * @description Teacher Profile
+ * @route       Get /api/teachers/profile
+ * @access      Private Teacher only
+ */
+exports.getTeacherProfile = expressAsyncHandler( async(req, res) => {
+    const teacher = await Teacher.findById(req.userAuth?._id).select('-password -createdAt -updatedAt');
+
+    if(!teacher) {
+        throw new Error("Teacher not found");
+    }
+    res.status(200).json({
+        status: "success",
+        data: teacher,
+        message: "Teacher profile fetched successfully",
+    });
+});
+
+/**
+ * @description Teacher updating profile admin
+ * @route       UPDATE /api/v1/teachers/:teacherID/update
+ * @access      Private Teacher Only
+ */
+exports.teacherUpdateProfile = expressAsyncHandler(async (req, res) => {
+    const {email, name, password} = req.body;
+    // if email is taken
+    const emailExists = await Teacher.findOne({email});
+    if(emailExists) {
+        throw new Error("This email already exists");
+    }
+
+    // check if user is updating password
+    if(password){
+        // update user
+        const teacher = await Teacher.findByIdAndUpdate(req.userAuth._id, {
+            email,
+            password: await hashPassword(password),
+            name,
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({
+            success: "success",
+            data: teacher,
+            message: "Teacher profile updated successfully",
+        });
+    } else {
+        // update user email and name
+        const teacher = await Teacher.findByIdAndUpdate(req.userAuth._id, {
+            email,
+            name,
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({
+            success: "success",
+            data: teacher,
+            message: "Teacher profile updated successfully",
+        });
+    }
 });
