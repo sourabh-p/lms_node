@@ -171,3 +171,72 @@ exports.teacherUpdateProfile = expressAsyncHandler(async (req, res) => {
         });
     }
 });
+
+/**
+ * @description Admin updating Teacher Profile
+ * @route       UPDATE /api/v1/teachers/:teacherID/update/admin
+ * @access      Private Admin Only
+ */
+exports.adminUpdateTeacher = expressAsyncHandler(async (req, res) => {
+    const {program, classLevel, academicYear, subject, } = req.body;
+    // if email is taken
+    const teacherFound = await Teacher.findById(req.params.teacherID);
+    if(!teacherFound) {
+        throw new Error("Teacher Not found");
+    }
+
+    // check if teacher is withdrawn
+    if (teacherFound.isWithdrawn){
+        throw new Error("Action denied, teacher is withdrawn");
+    }
+
+    // assign a program
+    if(program){
+        teacherFound.program = program;
+        await teacherFound.save();
+
+        res.status(200).json({
+            success: "success",
+            data: teacherFound,
+            message: "Teacher profile updated successfully",
+        });
+    }
+
+    // assign class level
+    if(classLevel){
+        teacherFound.classLevel = classLevel;
+        await teacherFound.save();
+
+        res.status(200).json({
+            success: "success",
+            data: teacherFound,
+            message: "Teacher profile updated successfully",
+        });
+    }
+
+    // assign academic year
+    if(academicYear){
+        teacherFound.academicYear =  academicYear;
+        await teacherFound.save();
+
+        res.status(200).json({
+            success: "success",
+            data: teacherFound,
+            message: "Teacher profile updated successfully",
+        });
+    }
+
+    // assign subject
+    if(subject){
+        teacherFound.subject =  subject;
+        await teacherFound.save();
+
+        res.status(200).json({
+            success: "success",
+            data: teacherFound,
+            message: "Teacher subject updated successfully",
+        });
+    }
+
+    
+});
