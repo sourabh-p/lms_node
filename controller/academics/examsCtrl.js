@@ -66,3 +66,33 @@ exports.createExam = AsyncHandler(async (req, res) => {
     data: examCreated,
   });
 });
+
+/**
+ * @description Get All Exams
+ * @route       GET /api/v1/exams
+ * @access      Private
+ */
+exports.getExams = AsyncHandler(async (req, res) => {
+  const exams = await Exam.find();
+
+  res.status(201).json({
+    status: "success",
+    message: "Exams fetched successfully",
+    data: exams,
+  });
+});
+
+/**
+ * @description Get Single Exam
+ * @route       GET /api/v1/exams/:id
+ * @access      Private Teachers Only
+ */
+exports.getExam = AsyncHandler(async (req, res) => {
+  const exam = await Exam.findById(req.params.id);
+
+  res.status(201).json({
+    status: "success",
+    message: "Exam fetched successfully",
+    data: exam,
+  });
+});
