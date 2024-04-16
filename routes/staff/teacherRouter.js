@@ -10,6 +10,7 @@ const {
   getTeacherByAdmin,
   getTeacherProfile,
   teacherUpdateProfile,
+  adminUpdateTeacher,
 } = require("../../controller/staff/teachersCtrl");
 const teachersRouter = express.Router();
 
@@ -20,5 +21,6 @@ teachersRouter.get("/profile", isTeacherLogin, isTeacher, getTeacherProfile);
 
 teachersRouter.get("/:teacherID/admin", isLogin, isAdmin, getTeacherByAdmin);
 teachersRouter.put("/:teacherID/update", isTeacherLogin, isTeacher, teacherUpdateProfile);
+teachersRouter.put("/:teacherID/update/admin", isLogin, isAdmin, adminUpdateTeacher);
 
 module.exports = teachersRouter;
