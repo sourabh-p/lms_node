@@ -1,20 +1,19 @@
 const express = require("express");
 const isTeacher = require("../../middlewares/isTeacher");
 const isTeacherLogin = require("../../middlewares/isTeacherLogin");
-const { createExam, getExams, getExam } = require("../../controller/academics/examsCtrl");
+const { createExam, getExams, getExam, updateExam, deleteExam } = require("../../controller/academics/examsCtrl");
 
 const examRouter = express.Router();
 
-/**
- * observe the middleware being defined in the route method of this chained router.
- */
 examRouter
-    .route("/", isTeacherLogin, isTeacher)
-    .post(createExam)
-    .get(getExams);
+    .route("/")
+    .post(isTeacherLogin, isTeacher, createExam)
+    .get(isTeacherLogin, isTeacher, getExams);
     
 examRouter
-    .route("/:id", isTeacherLogin, isTeacher)
-    .get(getExam);
+    .route("/:id")
+    .get(isTeacherLogin, isTeacher, getExam)
+    .put(isTeacherLogin, isTeacher, updateExam)
+    .delete(isTeacherLogin, isTeacher, deleteExam);
 
 module.exports=examRouter;
