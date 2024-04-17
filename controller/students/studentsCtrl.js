@@ -74,3 +74,18 @@ exports.getStudentProfile = AsyncHandler( async(req, res) => {
         message: "Student profile fetched successfully",
     });
 });
+
+/**
+ * @description Get All Students
+ * @route       GET /api/v1/students/admin
+ * @access      Private admin only
+ */
+exports.getAllStudentsByAdmin = AsyncHandler( async(req, res) => {
+    const students = await Student.find();
+
+    res.status(200).json({
+        status: "success",
+        message: "Students fetched successfully",
+        data: students,
+    });
+});
