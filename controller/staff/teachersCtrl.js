@@ -80,7 +80,6 @@ exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
 exports.getTeacherByAdmin = expressAsyncHandler(async(req, res) => {
     const teacherID = req.params.teacherID;
 
-    console.log('Received teacherID:', teacherID);
     try {
         // Try to find the teacher by ID
         const teacher = await Teacher.findById(teacherID);
