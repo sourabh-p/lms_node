@@ -89,3 +89,38 @@ exports.getAllStudentsByAdmin = AsyncHandler( async(req, res) => {
         data: students,
     });
 });
+
+/**
+ * @description Get Single a Student
+ * @route       POST /api/v1/students/:studentID/admin
+ * @access      Private admin only
+ */
+exports.getStudentByAdmin = AsyncHandler(async(req, res) => {
+    const studentID = req.params.studentID;
+
+    try {
+        // Try to find the student by ID
+        const student = await Student.findById(studentID);
+        
+        // Check if the teacher was found
+        if (!student) {
+            return res.status(404).json({
+                status: "error",
+                message: "Student not found"
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Student fetched successfully",
+            data: student
+        });
+    } catch (error) {
+        // If an error occurs (e.g., CastError for invalid ObjectId)
+        res.status(400).json({
+            status: "error",
+            message: "Invalid student ID format",
+            error: error.message // Optional: provide error message for debugging
+        });
+    }
+});
