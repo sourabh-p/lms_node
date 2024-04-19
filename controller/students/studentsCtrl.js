@@ -124,3 +124,47 @@ exports.getStudentByAdmin = AsyncHandler(async(req, res) => {
         });
     }
 });
+
+/**
+ * @description Student updating profile
+ * @route       UPDATE /api/v1/students/update
+ * @access      Private Student Only
+ */
+exports.studentUpdateProfile = AsyncHandler(async (req, res) => {
+    const {email, password} = req.body;
+    // if email is taken
+    const emailExists = await Student.findOne({email});
+    if(emailExists) {
+        throw new Error("This email already exists");
+    }
+
+    // check if user is updating password
+    if(password){
+        // update user
+        const student = await Student.findByIdAndUpdate(req.userAuth._id, {
+            email,
+            password: await hashPassword(password),
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({
+            success: "success",
+            data: student,
+            message: "Student profile updated successfully",
+        });
+    } else {
+        // update user email and name
+        const student = await Student.findByIdAndUpdate(req.userAuth._id, {
+            email,
+        }, {
+            new: true,
+            runValidators: true,
+        });
+        res.status(200).json({
+            success: "success",
+            data: student,
+            message: "Student profile updated successfully",
+        });
+    }
+});
