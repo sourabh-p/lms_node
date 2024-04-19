@@ -168,3 +168,46 @@ exports.studentUpdateProfile = AsyncHandler(async (req, res) => {
         });
     }
 });
+
+/**
+ * @description Admin Update Student eg: Assign Classes, name, etc.
+ * @route       UPDATE /api/v1/students/:studentID/update/admin
+ * @access      Private Admin Only
+ * 
+ * Notes:  $set operator replaces the value of a field with the specified value - mongoose handles saving those field. see docs: https://www.mongodb.com/docs/manual/reference/operator/update/set/
+ * Notes:  $addToSet operator adds a value to an array UNLESS the value is already present. see docs: https://www.mongodb.com/docs/manual/reference/operator/update/addToSet/
+ */
+exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
+    const { classLevels, academicYear, program, name, email, prefectName } = req.body;
+
+    // find the student by id
+    const studentFound = await Student.findById(req.params.studentID);
+    if (!studentFound) {
+        throw new Error("Student not found");
+    }
+    // update 
+    const studentUpdated = await Student.findByIdAndUpdate(req.params.studentID, 
+        {    
+            $set: {
+                name,
+                email,
+                academicYear,
+                program,
+                prefectName
+            },
+            $addToSet: {
+                classLevels
+            }
+        },
+        {
+            new: true,
+        }
+    );
+
+    // send response
+    res.status(200).json({
+        status: "success",
+        data: studentUpdated,
+        message: "Student updated successfully"
+    });
+});

@@ -1,7 +1,7 @@
 const express = require("express");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
-const { adminRegisterStudent, loginStudent, getStudentProfile, getAllStudentsByAdmin, getStudentByAdmin, studentUpdateProfile } = require("../../controller/students/studentsCtrl");
+const { adminRegisterStudent, loginStudent, getStudentProfile, getAllStudentsByAdmin, getStudentByAdmin, studentUpdateProfile, adminUpdateStudent } = require("../../controller/students/studentsCtrl");
 const isStudent = require("../../middlewares/isStudent");
 const isStudentLogin = require("../../middlewares/isStudentLogin");
 
@@ -12,6 +12,7 @@ studentRouter.post("/login", loginStudent);
 studentRouter.get("/profile", isStudentLogin, isStudent, getStudentProfile);
 studentRouter.get("/admin", isLogin, isAdmin, getAllStudentsByAdmin);
 studentRouter.get("/:studentID/admin", isLogin, isAdmin, getStudentByAdmin);
-studentRouter.put("/update", isStudentLogin, isStudent, studentUpdateProfile);
+studentRouter.put("/update", isStudentLogin, isStudent, studentUpdateProfile);       // student only
+studentRouter.put("/:studentID/update/admin", isLogin, isAdmin, adminUpdateStudent); // Admin only
 
 module.exports = studentRouter;
