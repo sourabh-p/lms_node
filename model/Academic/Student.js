@@ -17,14 +17,14 @@ const studentSchema = new mongoose.Schema(
         studentId: {
             type: String,
             required: true,
-            default: () => {
+            default: function() {
                 return (
                     "STU" +
                     Math.floor(100 + Math.random() * 900) +
-                    Date.new().toString().slice(2, 4) +
+                    Date.now().toString().slice(2, 4) +
                     this.name
                         .split("  ")
-                        .map(name => name[0])
+                        .map(function(name) { return name[0]; })
                         .join("")
                         .toUpperCase()
                 );
@@ -43,23 +43,21 @@ const studentSchema = new mongoose.Schema(
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "ClassLevel",
-                required: true,
             },
         ],
         currentClassLevel: {
             type: String,
-            default: () => {
+            default: function() {
                 return this.classLevels[this.classLevels.length -1];
             },
         },
         academicYear: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "AcademicYear",
-            required: true,
         },
         dateAdmitted: {
             type: Date,
-            default: Date.now,
+            default: Date.now(),
         },
         examResults: [
             {
@@ -70,7 +68,6 @@ const studentSchema = new mongoose.Schema(
         program: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Program",
-            required: true,
         },
         isPromotedToLevel200: {
             type: Boolean,
