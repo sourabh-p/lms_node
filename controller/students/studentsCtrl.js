@@ -218,7 +218,7 @@ exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
  * @route       POST /api/v1/students/exams/:examID/write
  * @access      Private Student Only
  */
-exports.writeExam = AsyncHandler(async (req, res, next) => {
+exports.writeExam = AsyncHandler(async (req, res) => {
     // get student taking exam
     const studentFound = await Student.findById(req.userAuth?.id);
     if(!studentFound){
@@ -228,14 +228,19 @@ exports.writeExam = AsyncHandler(async (req, res, next) => {
     const examFound = await Exam.findById(req.params.examID).populate(
         "questions"
     );
+    console.log({examFound});
     if(!examFound){
         throw new Error("Exam not found");
     }
     // get questions to be answered
     const questions = examFound?.questions;
+    // get all answers the user submitted
+    // get students questions
+    const answers = req.body?.answers;
+    
     res.status(200).json({
         status: "success",
-        data: questions,
+        data: questions, answers,
         
     })
 });
