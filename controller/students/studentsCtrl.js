@@ -211,3 +211,12 @@ exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
         message: "Student updated successfully"
     });
 });
+
+/**
+ * @description Student taking exam
+ * @route       POST /api/v1/students/exams/:examID/write
+ * @access      Private Student Only
+ */
+exports.writeExam = AsyncHandler(async (req, res, next) => {
+    res.json('Taking exam');
+});
