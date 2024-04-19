@@ -71,9 +71,17 @@ exports.createExam = AsyncHandler(async (req, res) => {
  * @description Get All Exams
  * @route       GET /api/v1/exams
  * @access      Private
+ * 
+ * Note: populating using an object allows more flexability to retrieve only the data we need
+ * In the path, we are passing createdBy, which returns the teacher that created the question on the exam
  */
 exports.getExams = AsyncHandler(async (req, res) => {
-  const exams = await Exam.find();
+  const exams = await Exam.find().populate({
+    path: "questions",
+    populate: {
+      path: "createdBy"
+    }
+  });
 
   res.status(201).json({
     status: "success",
