@@ -1,13 +1,10 @@
 const AsyncHandler = require("express-async-handler");
-const isTeacher = require("../../middlewares/isTeacher");
-const isTeacherLogin = require("../../middlewares/isTeacherLogin");
 const Question = require("../../model/Academic/Questions");
-const Teacher = require("../../model/Staff/Teacher");
 const Exam = require("../../model/Academic/Exam");
 
 /**
  * @description Create Question
- * @route POST /api/v1/:examID/questions
+ * @route POST /api/v1/questions/:examID
  * @access Private Teachers Only
  */
 exports.createQuestion = AsyncHandler(async (req, res) => {
@@ -21,12 +18,18 @@ exports.createQuestion = AsyncHandler(async (req, res) => {
   } = req.body;
   // Find the exam
   const examFound = await Exam.findById(req.params.examID);
-
+  // throw error if not found
   if (!examFound) {
     throw new Error("Exam not found");
   }
-  // create exam
-  const questionCreated = await Exam.create({
+  // check if question exists
+  const questionExists = await Question.findOne({question});
+  // throw error if already exists
+  if (questionExists) {
+    throw new Error("Question already exists");
+  }
+  // create question
+  const questionCreated = await Question.create({
     question,
     optionA,
     optionB,
