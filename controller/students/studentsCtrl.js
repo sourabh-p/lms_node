@@ -2,6 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const Student = require("../../model/Academic/Student");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
+const Exam = require("../../model/Academic/Exam");
 
 /**
  * @description Admin Register Student
@@ -218,5 +219,23 @@ exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
  * @access      Private Student Only
  */
 exports.writeExam = AsyncHandler(async (req, res, next) => {
-    res.json('Taking exam');
+    // get student taking exam
+    const studentFound = await Student.findById(req.userAuth?.id);
+    if(!studentFound){
+        throw new Error("Student not found");
+    }
+    // get exam
+    const examFound = await Exam.findById(req.params.examID).populate(
+        "questions"
+    );
+    if(!examFound){
+        throw new Error("Exam not found");
+    }
+    // get questions to be answered
+    const questions = examFound?.questions;
+    res.status(200).json({
+        status: "success",
+        data: questions,
+        
+    })
 });
