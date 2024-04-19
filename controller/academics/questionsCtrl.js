@@ -80,3 +80,44 @@ exports.getQuestion = AsyncHandler(async (req, res) => {
     data: question,
   });
 });
+
+/**
+ * @description Update Question
+ * @route PUT /api/v1/questions/:id
+ * @access Private Teachers Only
+ */
+exports.updateQuestion = AsyncHandler(async (req, res) => {
+  const {
+    question,
+    optionA,
+    optionB,
+    optionC,
+    optionD,
+    correctAnswer,
+  } = req.body;
+  // check if exists
+  const questionFound = Question.findOne({ question });
+  if (!questionFound) {
+    throw new Error("Question not found");
+  }
+  const updatedQuestion = await Question.findByIdAndUpdate(
+    req.params.id,
+    {
+      question,
+      optionA,
+      optionB,
+      optionC,
+      optionD,
+      correctAnswer,
+    },
+    {
+      new: true,
+    }
+  );
+  // return response
+  res.status(200).json({
+    status: "success",
+    message: "Question update successfully",
+    data: updatedQuestion,
+  });
+});
