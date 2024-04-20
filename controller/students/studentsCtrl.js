@@ -242,6 +242,13 @@ exports.writeExam = AsyncHandler(async (req, res) => {
         throw new Error("You have not answered all of the questions");
     }
 
+    /**
+     * Check if users name is already in students who took this exam using the id from student in the exam results as the query */
+    const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
+    if (studentFoundInResults) {
+        throw new Error("You have already taken this exam. Wait for your results.");
+    }
+
     // build report object - this will tell the student how many answers they got right/wrong
     let correctAnswers    = 0;
     let wrongAnswers      = 0;
