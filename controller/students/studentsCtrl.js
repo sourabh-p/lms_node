@@ -235,12 +235,74 @@ exports.writeExam = AsyncHandler(async (req, res) => {
     // get questions to be answered
     const questions = examFound?.questions;
     // get all answers the user submitted
-    // get students questions
-    const answers = req.body?.answers;
-    
+    const studentAnswers = req.body?.answers;
+    // check if student answered all questions
+    if (studentAnswers.length !== questions.length) {
+        throw new Error("You have not answered all of the questions");
+    }
+
+    // build report object - this will tell the student how many answers they got right/wrong
+    let correctAnswers    = 0;
+    let wrongAnswers      = 0;
+    let status            = ""; // failed/passed
+    let grade             = 0;
+    let score             = 0;
+    let answeredQuestions = 0;
+
+    // check for answers
+    // loop through questions to the possible answers
+    for (let i = 0; i < questions.length; i++) {
+        // find the single question
+        const question = questions[i];
+        // check if the answer is correct
+        if(question.correctAnswer === studentAnswers[i]){
+            correctAnswers++;
+            score++;
+            question.isCorrect = true;
+        } else {
+            wrongAnswers++;
+        }
+    }
+
+     // calculate reports
+     totalQuestions    = questions.length;
+     grade             = (correctAnswers / questions.length) * 100;
+     answeredQuestions = questions.map(question => {
+         return {
+             question: question.question,
+             correctAnswers: question.correctAnswer,
+             isCorrect: question.isCorrect,
+         };
+     });
+
+     if(grade >= 50) {
+        status = 'Passed'
+     } else {
+        status = 'Fail';
+     }
+
+     // Remarks
+     if (grade >= 80) {
+        remarks = 'Excellent!'
+     } else if (grade >=70) {
+        remarks = 'Very Good';
+     } else if (grade >=60) {
+        remarks = 'Good';
+     } else if (grade >=50) {
+        remarks = 'Fair';
+     } else {
+        remarks = "Needs Improvement";
+     }
+
+    // submit request
     res.status(200).json({
         status: "success",
-        data: questions, answers,
-        
+        correctAnswers,
+        wrongAnswers,
+        score,
+        grade,
+        status,
+        remarks,
+        answeredQuestions,
     })
 });
