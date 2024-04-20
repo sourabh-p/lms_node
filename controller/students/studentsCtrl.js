@@ -3,6 +3,7 @@ const Student = require("../../model/Academic/Student");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
 const Exam = require("../../model/Academic/Exam");
+const ExamResult = require("../../model/Academic/ExamResults");
 
 /**
  * @description Admin Register Student
@@ -276,14 +277,14 @@ exports.writeExam = AsyncHandler(async (req, res) => {
      });
 
      if(grade >= 50) {
-        status = 'Passed'
+        status = 'Pass'
      } else {
         status = 'Fail';
      }
 
      // Remarks
      if (grade >= 80) {
-        remarks = 'Excellent!'
+        remarks = 'Excellent!';
      } else if (grade >=70) {
         remarks = 'Very Good';
      } else if (grade >=60) {
@@ -294,6 +295,22 @@ exports.writeExam = AsyncHandler(async (req, res) => {
         remarks = "Needs Improvement";
      }
 
+     // generate exam results
+     const examResults = await ExamResult.create({
+        student: studentFound?._id,
+        exam: examFound?._id,
+        grade,
+        score,
+        status,
+        remarks,
+        classLevel: examFound?.classLevel,
+        academicTerm: examFound?.academicTerm,
+        academicYear: examFound?.academicYear,
+     });
+     // push results into students
+     studentFound.examResults.push(examResults?._id);
+     // save
+     await studentFound.save();
     // submit request
     res.status(200).json({
         status: "success",
