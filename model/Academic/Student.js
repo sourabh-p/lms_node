@@ -41,8 +41,7 @@ const studentSchema = new mongoose.Schema(
          */
         classLevels: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "ClassLevel",
+                type: String,
             },
         ],
         currentClassLevel: {

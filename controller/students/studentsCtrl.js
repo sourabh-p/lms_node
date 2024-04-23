@@ -2,6 +2,8 @@ const AsyncHandler = require("express-async-handler");
 const Student = require("../../model/Academic/Student");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
+const Exam = require("../../model/Academic/Exam");
+const ExamResult = require("../../model/Academic/ExamResults");
 
 /**
  * @description Admin Register Student
@@ -210,4 +212,121 @@ exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
         data: studentUpdated,
         message: "Student updated successfully"
     });
+});
+
+/**
+ * @description Student taking exam
+ * @route       POST /api/v1/students/exams/:examID/write
+ * @access      Private Student Only
+ */
+exports.writeExam = AsyncHandler(async (req, res) => {
+    // get student taking exam
+    const studentFound = await Student.findById(req.userAuth?.id);
+    if(!studentFound){
+        throw new Error("Student not found");
+    }
+    // get exam
+    const examFound = await Exam.findById(req.params.examID).populate(
+        "questions"
+    );
+    console.log({examFound});
+    if(!examFound){
+        throw new Error("Exam not found");
+    }
+    // get questions to be answered
+    const questions = examFound?.questions;
+    // get all answers the user submitted
+    const studentAnswers = req.body?.answers;
+    // check if student answered all questions
+    if (studentAnswers.length !== questions.length) {
+        throw new Error("You have not answered all of the questions");
+    }
+
+    /**
+     * Check if users name is already in students who took this exam using the id from student in the exam results as the query */
+    const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
+    if (studentFoundInResults) {
+        throw new Error("You have already taken this exam. Wait for your results.");
+    }
+
+    // build report object - this will tell the student how many answers they got right/wrong
+    let correctAnswers    = 0;
+    let wrongAnswers      = 0;
+    let status            = ""; // failed/passed
+    let grade             = 0;
+    let score             = 0;
+    let answeredQuestions = 0;
+
+    // check for answers
+    // loop through questions to the possible answers
+    for (let i = 0; i < questions.length; i++) {
+        // find the single question
+        const question = questions[i];
+        // check if the answer is correct
+        if(question.correctAnswer === studentAnswers[i]){
+            correctAnswers++;
+            score++;
+            question.isCorrect = true;
+        } else {
+            wrongAnswers++;
+        }
+    }
+
+     // calculate reports
+     totalQuestions    = questions.length;
+     grade             = (correctAnswers / questions.length) * 100;
+     answeredQuestions = questions.map(question => {
+         return {
+             question: question.question,
+             correctAnswers: question.correctAnswer,
+             isCorrect: question.isCorrect,
+         };
+     });
+
+     if(grade >= 50) {
+        status = 'Pass'
+     } else {
+        status = 'Fail';
+     }
+
+     // Remarks
+     if (grade >= 80) {
+        remarks = 'Excellent!';
+     } else if (grade >=70) {
+        remarks = 'Very Good';
+     } else if (grade >=60) {
+        remarks = 'Good';
+     } else if (grade >=50) {
+        remarks = 'Fair';
+     } else {
+        remarks = "Needs Improvement";
+     }
+
+     // generate exam results
+     const examResults = await ExamResult.create({
+        student: studentFound?._id,
+        exam: examFound?._id,
+        grade,
+        score,
+        status,
+        remarks,
+        classLevel: examFound?.classLevel,
+        academicTerm: examFound?.academicTerm,
+        academicYear: examFound?.academicYear,
+     });
+     // push results into students
+     studentFound.examResults.push(examResults?._id);
+     // save
+     await studentFound.save();
+    // submit request
+    res.status(200).json({
+        status: "success",
+        correctAnswers,
+        wrongAnswers,
+        score,
+        grade,
+        status,
+        remarks,
+        answeredQuestions,
+    })
 });
