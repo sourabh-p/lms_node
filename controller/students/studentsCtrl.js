@@ -329,18 +329,50 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   // push results into students
   //  studentFound.examResults.push(examResults?._id);
 
-  // Promote Student to next Class Level or Term/Year if necessary
-  // check the term the from the examFound
-  console.log(examFound);
+  /**
+   * Promote Student to next Class Level or Term/Year if necessary
+   */
+  // Promote to level 200
   if (
-    examFound.academicTerm.name === "Third term" &&
+    examFound.academicTerm.name === "3rd term" &&
     status === Student.STUDENT_PASS &&
     studentFound?.currentClassLevel === "Level 100"
   ) {
-    console.log("yes, promote");
-    // promote student to level 200
     studentFound.classLevels.push("Level 200");
     studentFound.currentClassLevel = "Level 200";
+    await studentFound.save();
+  }
+
+  // Promote to level 300
+  if (
+    examFound.academicTerm.name === "3rd term" &&
+    status === Student.STUDENT_PASS &&
+    studentFound?.currentClassLevel === "Level 200"
+  ) {
+    studentFound.classLevels.push("Level 300");
+    studentFound.currentClassLevel = "Level 300";
+    await studentFound.save();
+  }
+
+  // Promote to level 400
+  if (
+    examFound.academicTerm.name === "3rd term" &&
+    status === Student.STUDENT_PASS &&
+    studentFound?.currentClassLevel === "Level 300"
+  ) {
+    studentFound.classLevels.push("Level 400");
+    studentFound.currentClassLevel = "Level 400";
+    await studentFound.save();
+  }
+
+  // Promote to level 500
+  if (
+    examFound.academicTerm.name === "3rd term" &&
+    status === Student.STUDENT_PASS &&
+    studentFound?.currentClassLevel === "Level 400"
+  ) {
+    studentFound.classLevels.push("Level 500");
+    studentFound.currentClassLevel = "Level 500";
     await studentFound.save();
   }
 
