@@ -120,4 +120,8 @@ const studentSchema = new mongoose.Schema(
 // Model
 const Student = mongoose.model( "Student", studentSchema );
 
+// Defining some constants
+Student.STUDENT_PASS = "Pass";
+Student.STUDENT_FAIL = "Fail";
+
 module.exports = Student;

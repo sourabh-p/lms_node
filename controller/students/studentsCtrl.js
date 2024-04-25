@@ -296,9 +296,9 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   });
 
   if (grade >= 50) {
-    status = "Pass";
+    status = Student.STUDENT_PASS;
   } else {
-    status = "Fail";
+    status = Student.STUDENT_FAIL;
   }
 
   // Remarks
@@ -334,7 +334,7 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   console.log(examFound);
   if (
     examFound.academicTerm.name === "Third term" &&
-    status === "Pass" &&
+    status === Student.STUDENT_PASS &&
     studentFound?.currentClassLevel === "Level 100"
   ) {
     console.log("yes, promote");
