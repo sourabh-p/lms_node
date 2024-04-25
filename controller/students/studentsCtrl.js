@@ -190,7 +190,7 @@ exports.studentUpdateProfile = AsyncHandler(async (req, res) => {
  * Notes:  $addToSet operator adds a value to an array UNLESS the value is already present. see docs: https://www.mongodb.com/docs/manual/reference/operator/update/addToSet/
  */
 exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
-  const { classLevels, academicYear, program, name, email, prefectName } =
+  const { classLevels, academicYear, program, name, email, prefectName, isSuspended, isWithdrawn } =
     req.body;
 
   // find the student by id
@@ -208,6 +208,8 @@ exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
         academicYear,
         program,
         prefectName,
+        isSuspended, 
+        isWithdrawn
       },
       $addToSet: {
         classLevels,
@@ -256,10 +258,15 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   }
 
   /** Check if users name is already in students who took this exam using the id from student in the exam results as the query */
-  // const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
-  // if (studentFoundInResults) {
-  //     throw new Error("You have already taken this exam. Wait for your results.");
-  // }
+  const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
+  if (studentFoundInResults) {
+      throw new Error("You have already taken this exam. Wait for your results.");
+  }
+
+  // Check if student is suspended
+  if(studentFound.isWithdrawn || studentFound.isSuspended) {
+    throw new Error("You are withdrawn/suspended and cannot take this exam.");
+  }
 
   // build report object - this will tell the student how many answers they got right/wrong
   let correctAnswers = 0;
@@ -315,19 +322,21 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   }
 
   // generate exam results
-  //  const examResults = await ExamResult.create({
-  //     student: studentFound?._id,
-  //     exam: examFound?._id,
-  //     grade,
-  //     score,
-  //     status,
-  //     remarks,
-  //     classLevel: examFound?.classLevel,
-  //     academicTerm: examFound?.academicTerm,
-  //     academicYear: examFound?.academicYear,
-  //  });
+   const examResults = await ExamResult.create({
+      student: studentFound?._id,
+      exam: examFound?._id,
+      grade,
+      score,
+      status,
+      remarks,
+      classLevel: examFound?.classLevel,
+      academicTerm: examFound?.academicTerm,
+      academicYear: examFound?.academicYear,
+   });
   // push results into students
-  //  studentFound.examResults.push(examResults?._id);
+   studentFound.examResults.push(examResults?._id);
+   // save
+   await studentFound.save();
 
   /**
    * Promote Student to next Class Level or Term/Year if necessary
@@ -376,19 +385,20 @@ exports.writeExam = AsyncHandler(async (req, res) => {
     await studentFound.save();
   }
 
-  // save
-  //  await studentFound.save();
+  // Promote to Graduate
+  if (
+    examFound.academicTerm.name === "3rd term" &&
+    status === Student.STUDENT_PASS &&
+    studentFound?.currentClassLevel === "Level 500"
+  ) {
+    studentFound.isGraduated = true;
+    studentFound.yearGraduated = new Date();
+    await studentFound.save();
+  }
+
   // submit request
   res.status(200).json({
     status: "success",
-    studentFound,
-    correctAnswers,
-    wrongAnswers,
-    score,
-    grade,
-    status,
-    remarks,
-    answeredQuestions,
-    // examResults,
+    data: "You have submitted your exam successfully. Check later for your results."
   });
 });
