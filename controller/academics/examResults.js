@@ -1,5 +1,6 @@
 const AsyncHandler = require("express-async-handler");
 const ExamResult = require("../../model/Academic/ExamResults");
+const Student = require("../../model/Academic/Student");
 
 /**
  * @description Exam results check
@@ -7,7 +8,28 @@ const ExamResult = require("../../model/Academic/ExamResults");
  * @access      Private Students Only
  */
 exports.checkExamResults = AsyncHandler(async  (req, res) => {
-    res.json('checking results');
+    // find the student with request object
+    const studentFound = await Student.findById(req.userAuth?._id);
+    if(!studentFound){
+        throw new Error("No student found");
+    }
+    // get exam result from database using params id and student's _id
+    const examResult = await ExamResult.findOne({
+        studentID: studentFound.studentId,
+        _id: req.params.id
+    });
+    if(!examResult) {
+        throw new Error("Exam results not found");
+    }
+    // check if exam is published
+    if(examResult?.isPublished === false) {
+        throw new Error("Exam results is not available, check out later");
+    }
+    res.json({
+        status:"success",
+        message: "Exam Results",
+        data: examResult,
+    });
 });
 
 /**
