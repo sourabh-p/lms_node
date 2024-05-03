@@ -258,10 +258,10 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   }
 
   /** Check if users name is already in students who took this exam using the id from student in the exam results as the query */
-  const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
-  if (studentFoundInResults) {
-      throw new Error("You have already taken this exam. Wait for your results.");
-  }
+  // const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
+    // if (studentFoundInResults) {
+    //     throw new Error("You have already taken this exam. Wait for your results.");
+    // }
 
   // Check if student is suspended
   if(studentFound.isWithdrawn || studentFound.isSuspended) {
@@ -332,6 +332,7 @@ exports.writeExam = AsyncHandler(async (req, res) => {
       classLevel: examFound?.classLevel,
       academicTerm: examFound?.academicTerm,
       academicYear: examFound?.academicYear,
+      answeredQuestions: answeredQuestions,
    });
   // push results into students
    studentFound.examResults.push(examResults?._id);

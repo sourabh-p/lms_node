@@ -27,6 +27,11 @@ const  examResultSchema = new Schema(
         required: true,
         default: 30,
     },
+    answeredQuestions : [
+        {
+            type: Object,
+        }
+    ],
     // failed/passed
     status: {
         type: String,
