@@ -50,3 +50,30 @@ exports.getExamResults = AsyncHandler(async (req, res) => {
     data: results,
   });
 });
+
+/**
+ * @description Admin publish exam results
+ * @route       PUT /api/v1/exam-results/:id/admin-toggle-publish
+ * @access      Private Students Only
+ */
+exports.adminToggleExamResult = AsyncHandler(async (req, res) => {
+  // find the exam results
+  const examResult = await ExamResult.findById(req.params.id);
+  if (!examResult) {
+    throw new Error("Exam result not found");
+  }
+  const publishResult = await ExamResult.findByIdAndUpdate(
+    req.params.id,
+    {
+      isPublished: req.body.publish,
+    },
+    {
+      new: true,
+    }
+  );
+  res.status(200).json({
+    status: "success",
+    message: "Exam results Updated",
+    data: publishResult,
+  });
+});
