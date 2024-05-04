@@ -67,14 +67,38 @@ exports.loginStudent = AsyncHandler(async (req, res) => {
 exports.getStudentProfile = AsyncHandler(async (req, res) => {
   const student = await Student.findById(req.userAuth?._id).select(
     "-password -createdAt -updatedAt"
-  );
+  ).populate("examResults");
+  
 
   if (!student) {
     throw new Error("Student not found");
   }
+  // Get student profile
+  const studentProfile = {
+    name: student?.name,
+    email: student?.email,
+    currentClassLevel: student?.currentClassLevel,
+    program: student?.program,
+    dateAdmitted: student?.dateAdmitted,
+    isSuspended: student?.isSuspended,
+    isWithdrawn: student?.isWithdrawn,
+    studentId: student?.studentId,
+    prefectName: student?.prefectName,
+  };
+  // get student exam results
+  const studentExamResults = student?.examResults;
+  // current exam
+  const currentExamResult = studentExamResults[studentExamResults.length - 1];
+  // check if exam is published
+  const isPublished = currentExamResult?.isPublished;
+  console.log(currentExamResult);
+  // send response
   res.status(200).json({
     status: "success",
-    data: student,
+    data: {
+      studentProfile,
+      currentExamResult: isPublished ? currentExamResult : [],
+    },
     message: "Student profile fetched successfully",
   });
 });
@@ -258,10 +282,10 @@ exports.writeExam = AsyncHandler(async (req, res) => {
   }
 
   /** Check if users name is already in students who took this exam using the id from student in the exam results as the query */
-  // const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
-    // if (studentFoundInResults) {
-    //     throw new Error("You have already taken this exam. Wait for your results.");
-    // }
+  const studentFoundInResults = await ExamResult.findOne({ student: studentFound?._id});
+  if (studentFoundInResults) {
+      throw new Error("You have already taken this exam. Wait for your results.");
+  }
 
   // Check if student is suspended
   if(studentFound.isWithdrawn || studentFound.isSuspended) {
