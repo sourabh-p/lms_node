@@ -12,6 +12,7 @@ const teachersRouter = require('../routes/staff/teacherRouter');
 const examRouter = require('../routes/academics/examRoutes');
 const studentRouter = require('../routes/students/studentRouter');
 const questionsRouter = require('../routes/academics/questionRoutes');
+const examResultRouter = require('../routes/academics/examResultsRoutes');
 
 const app  = express(); //  create application instance of express
 
@@ -34,6 +35,7 @@ app.use("/api/v1/teachers", teachersRouter); // Teachers routes
 app.use("/api/v1/exams", examRouter); // Exams routes
 app.use("/api/v1/students", studentRouter); // Student routes
 app.use("/api/v1/questions", questionsRouter); // Question routes
+app.use("/api/v1/exam-results", examResultRouter); // Question routes
 
 /**
  * Error Middlewares
