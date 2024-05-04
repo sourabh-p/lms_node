@@ -4,6 +4,7 @@ const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
 const Exam = require("../../model/Academic/Exam");
 const ExamResult = require("../../model/Academic/ExamResults");
+const Admin = require("../../model/Staff/Admin");
 
 /**
  * @description Admin Register Student
@@ -12,6 +13,11 @@ const ExamResult = require("../../model/Academic/ExamResults");
  */
 exports.adminRegisterStudent = AsyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  // find the admin
+  const adminFound = await Admin.findById(req.userAuth._id);
+  if (!adminFound) {
+      throw new Error("Admin not found");
+  }
   // check if the student already exists
   const student = await Student.findOne({ email: email });
   if (student) {
@@ -25,6 +31,9 @@ exports.adminRegisterStudent = AsyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
+  // push teacher into admin
+  adminFound.students.push(studentRegistered?._id);
+  await adminFound.save();
   // send response
   res.status(201).json({
     status: "success",
