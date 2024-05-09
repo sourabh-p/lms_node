@@ -44,11 +44,6 @@ adminRouter.get("/profile", isLogin, isAdmin, getAdminProfileCtrl);
 adminRouter.put("/", isLogin, isAdmin, updateAdminCtrl);
 
 /**
- * Delete Admin
- */
-adminRouter.delete("/:id", deleteAdminCtrl);
-
-/**
  * Suspend Teacher
  */
 adminRouter.put("/suspend/teacher/:id", adminSuspendTeacherCtrl);
