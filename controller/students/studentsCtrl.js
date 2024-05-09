@@ -100,7 +100,6 @@ exports.getStudentProfile = AsyncHandler(async (req, res) => {
   const currentExamResult = studentExamResults[studentExamResults.length - 1];
   // check if exam is published
   const isPublished = currentExamResult?.isPublished;
-  console.log(currentExamResult);
   // send response
   res.status(200).json({
     status: "success",

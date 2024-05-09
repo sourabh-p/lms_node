@@ -12,7 +12,6 @@ const isLogin = async (req, res, next) => {
      */
     const token     = headerObj?.authorization?.split(" ")[1];// using optional chaining
     // const token = headerObj && headerObj.authorization && headerObj.authorization.split(" ")[1]; // using optional chaining
-    // console.log(token, headerObj);
     //verify token
     const verifiedToken = verifyToken(token);
 
