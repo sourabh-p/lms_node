@@ -8,6 +8,8 @@ const {
 } = require("../../controller/academics/academicTermCtrl");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
+const advancedResults = require("../../middlewares/advancedResults");
+const AcademicTerm = require("../../model/Academic/AcademicTerm");
 
 const academicTermRouter = express.Router();
 
@@ -17,7 +19,7 @@ const academicTermRouter = express.Router();
 academicTermRouter
   .route("/")
   .post(isLogin, isAdmin, createAcademicTerm)
-  .get(isLogin, isAdmin, getAcademicTerms);
+  .get(isLogin, isAdmin, advancedResults(AcademicTerm), getAcademicTerms);
 
 academicTermRouter
   .route("/:id")
