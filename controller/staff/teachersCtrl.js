@@ -73,6 +73,7 @@ exports.loginTeacher = expressAsyncHandler(async  (req, res)=>{
  * @access      Private admin only
  */
 exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
+    console.log(req.res);  
     let TeachersQuery = Teacher.find(); // return all data via `query`, then do pagination using mongoose
     /**
      * query string - additional data passed to url (optional - controller will still run) 
@@ -116,15 +117,17 @@ exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
         }
     }
 
-    const teachers = await TeachersQuery.find().skip(skip).limit(limit);
-    res.status(200).json({
-        total,
-        pagination,
-        results: teachers.length,
-        status: "success",
-        message: "Teachers fetched successfully",
-        data: teachers,
-    });
+    res.status(200).json(res.myData);
+
+    // const teachers = await TeachersQuery.find().skip(skip).limit(limit);
+    // res.status(200).json({
+    //     total,
+    //     pagination,
+    //     results: teachers.length,
+    //     status: "success",
+    //     message: "Teachers fetched successfully",
+    //     data: teachers,
+    // });
 });
 
 /**
