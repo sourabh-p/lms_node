@@ -14,10 +14,11 @@ const {
   adminUnpublishResultsCtrl,
 } = require("../../controller/staff/adminCtrl");
 
-const isLogin     = require("../../middlewares/isLogin");
+const isLogin = require("../../middlewares/isLogin");
 const isAdmin = require("../../middlewares/isAdmin");
 const Admin = require("../../model/Staff/Admin");
 const advancedResults = require("../../middlewares/advancedResults");
+const isAuthenticated = require("../../middlewares/isAuthenticated");
 const adminRouter = express.Router();
 
 /**
@@ -38,7 +39,12 @@ adminRouter.get("/", isLogin, advancedResults(Admin), getAdminsCtrl);
 /**
  * Single Admin
  */
-adminRouter.get("/profile", isLogin, isAdmin, getAdminProfileCtrl);
+adminRouter.get(
+  "/profile",
+  isAuthenticated(Admin),
+  isAdmin,
+  getAdminProfileCtrl
+);
 
 /**
  * Update Admin

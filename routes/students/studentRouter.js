@@ -6,18 +6,19 @@ const isStudent = require("../../middlewares/isStudent");
 const isStudentLogin = require("../../middlewares/isStudentLogin");
 const advancedResults = require("../../middlewares/advancedResults");
 const Student = require("../../model/Academic/Student");
+const isAuthenticated = require("../../middlewares/isAuthenticated");
 
 const studentRouter = express.Router();
 
 studentRouter.post("/admin/register", isLogin, isAdmin, adminRegisterStudent);
 studentRouter.post("/login", loginStudent);
-studentRouter.get("/profile", isStudentLogin, isStudent, getStudentProfile);
+studentRouter.get("/profile", isAuthenticated(Student), isStudent, getStudentProfile);
 studentRouter.get("/admin", isLogin, isAdmin, advancedResults(Student), getAllStudentsByAdmin);
 studentRouter.get("/:studentID/admin", isLogin, isAdmin, getStudentByAdmin);
 /** Students taking exams can access following: */
-studentRouter.post("/exams/:examID/write", isStudentLogin, isStudent, writeExam); // Student only writes exams
+studentRouter.post("/exams/:examID/write", isAuthenticated(Student), isStudent, writeExam); // Student only writes exams
 /** */
-studentRouter.put("/update", isStudentLogin, isStudent, studentUpdateProfile);       // student only
+studentRouter.put("/update", isAuthenticated(Student), isStudent, studentUpdateProfile);       // student only
 studentRouter.put("/:studentID/update/admin", isLogin, isAdmin, adminUpdateStudent); // Admin only
 
 
