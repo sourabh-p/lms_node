@@ -23,7 +23,12 @@ teachersRouter.get(
   "/admin",
   isLogin,
   isAdmin,
-  advancedResults(Teacher), // since this is a higher order function, (we need to call the outer function in order to call the inner function)
+  advancedResults(Teacher, {
+    path : "examsCreated",
+    populate: {
+      path: "questions", // inside exam created, we want to populate questions
+    }
+  }), // model first, then data IDs you want populate
   getAllTeachersAdmin
 );
 
