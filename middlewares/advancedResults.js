@@ -5,6 +5,13 @@
 const advancedResults = (model, populate) => {
     // since req is here, we can use queries
     return (req, res, next) => {
+        console.log("Advanced results middleware");
+        // add user into res
+        res.myData = {
+            name: "Adam",
+        };
+        next();
+    };
+};
 
-    }
-}
+module.exports = advancedResults;
