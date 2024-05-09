@@ -13,6 +13,7 @@ const {
   adminUpdateTeacher,
 } = require("../../controller/staff/teachersCtrl");
 const advancedResults = require("../../middlewares/advancedResults");
+const Teacher = require("../../model/Staff/Teacher");
 const teachersRouter = express.Router();
 
 teachersRouter.post("/admin/register", isLogin, isAdmin, adminRegisterTeacher);
@@ -22,7 +23,7 @@ teachersRouter.get(
   "/admin",
   isLogin,
   isAdmin,
-  advancedResults(), // since this is a higher order function, (we need to call the outer function in order to call the inner function)
+  advancedResults(Teacher), // since this is a higher order function, (we need to call the outer function in order to call the inner function)
   getAllTeachersAdmin
 );
 
