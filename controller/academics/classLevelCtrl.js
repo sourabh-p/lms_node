@@ -40,14 +40,8 @@ exports.createClassLevel = AsyncHandler(async (req, res) => {
  * @access Private
  */
 exports.getClassLevels = AsyncHandler(async (req, res) => {
-    const allClassLevels = await ClassLevel.find();
-
-    res.status(201).json({
-        status: 'success',
-        message: "Class levels fetched successfully",
-        data: allClassLevels,
-    });
-
+    
+    res.status(200).json(res.results);
 });
 
 /**
