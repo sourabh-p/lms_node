@@ -16,6 +16,8 @@ const {
 
 const isLogin     = require("../../middlewares/isLogin");
 const isAdmin = require("../../middlewares/isAdmin");
+const Admin = require("../../model/Staff/Admin");
+const advancedResults = require("../../middlewares/advancedResults");
 const adminRouter = express.Router();
 
 /**
@@ -31,7 +33,7 @@ adminRouter.post("/login", loginAdminCtrl);
 /**
  * Get All Admin
  */
-adminRouter.get("/", isLogin, getAdminsCtrl);
+adminRouter.get("/", isLogin, advancedResults(Admin), getAdminsCtrl);
 
 /**
  * Single Admin
