@@ -3,6 +3,8 @@ const { createAcademicYear, getAcademicYears, getAcademicYear, updateAcademicYea
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
 const { create } = require("../../model/Academic/AcademicYear");
+const AcademicYear = require("../../model/Academic/AcademicYear");
+const advancedResults = require("../../middlewares/advancedResults");
 
 const academicYearRouter = express.Router();
 
@@ -26,7 +28,7 @@ const academicYearRouter = express.Router();
 academicYearRouter
   .route("/")
   .post(isLogin, isAdmin, createAcademicYear)
-  .get(isLogin, isAdmin, getAcademicYears);
+  .get(isLogin, isAdmin, advancedResults(AcademicYear),getAcademicYears);
 
 academicYearRouter
   .route("/:id")
