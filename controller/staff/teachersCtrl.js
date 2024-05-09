@@ -73,17 +73,20 @@ exports.loginTeacher = expressAsyncHandler(async  (req, res)=>{
  * @access      Private admin only
  */
 exports.getAllTeachersAdmin = expressAsyncHandler( async(req, res) => {
-    let TeachersQuery = Teacher.find({
-        // ignoring casing
-        name: {$regex: req.query.name, $options: "i"},
-        // email: {$regex: 'luca', $options: "i"},
-    }); // return all data via `query`, then do pagination using mongoose
+    let TeachersQuery = Teacher.find(); // return all data via `query`, then do pagination using mongoose
     /**
      * query string - additional data passed to url (optional - controller will still run) 
      * params /:id any value that comes after id and must match db
      * 
-     * limit(req.query.limit)
      */
+
+    // If the query string has the name property, search for the name
+    if( req.query.name ){ 
+        // filtering/searching
+        TeachersQuery = TeachersQuery.find({
+            name: {$regex: req.query.name, $options: "i"},
+        });
+    }
 
     /**
      * Convert query strings to numbers
