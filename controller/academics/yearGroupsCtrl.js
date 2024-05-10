@@ -43,12 +43,8 @@ exports.createYearGroup = AsyncHandler(async (req, res) => {
  * @access Private
  */
 exports.getYearGroups = AsyncHandler(async (req, res) => {
-    const allYearGroups = await YearGroup.find();
-    res.status(201).json({
-        status: 'success',
-        message: "Year Groups fetched successfully",
-        data: allYearGroups,
-    });
+    
+    res.status(200).json(res.results);
 });
 
 /**
@@ -58,7 +54,7 @@ exports.getYearGroups = AsyncHandler(async (req, res) => {
  */
 exports.getYearGroup = AsyncHandler(async (req, res) => { 
     const singleYearGroup = await YearGroup.findById(req.params.id);
-    console.log('singleYearGroup :>> ', singleYearGroup);
+
     res.status(201).json({
         status: "success",
         message: "Single Year Group fetched successfully",

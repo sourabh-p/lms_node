@@ -2,6 +2,8 @@ const express = require("express");
 const { createClassLevel, getClassLevel, getClassLevels, updateClassLevel, deleteClassLevel } = require("../../controller/academics/classLevelCtrl");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
+const advancedResults = require("../../middlewares/advancedResults");
+const AcademicTerm = require("../../model/Academic/AcademicTerm");
 
 const classLevelRouter = express.Router();
 
@@ -11,7 +13,7 @@ const classLevelRouter = express.Router();
 classLevelRouter
   .route("/")
   .post(isLogin, isAdmin, createClassLevel)
-  .get(isLogin, isAdmin, getClassLevels);
+  .get(isLogin, isAdmin, advancedResults(AcademicTerm),getClassLevels);
 
 classLevelRouter
   .route("/:id")

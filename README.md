@@ -79,6 +79,9 @@ To start the application, you can use the following npm scripts defined in the p
 - To start the server with nodemon for development (auto-restarts the server on file changes):
 `npm run server`
 
+## Setting up Postman
+The API is built using Express.js and serves a RESTful JSON API. You can interact with it through a tool like Postman. I will provide the public API for my postman collection for this project if you would like to pull it.
+
 ## Setting up MongoDB
 To set up your MongoDB environment, you can either install MongoDB locally or use a MongoDB cloud service like MongoDB Atlas.
 

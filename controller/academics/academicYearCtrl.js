@@ -41,13 +41,8 @@ exports.createAcademicYear = AsyncHandler(async (req, res) => {
  * @access Private
  */
 exports.getAcademicYears = AsyncHandler(async (req, res) => {
-    const academicYears = await AcademicYear.find();
 
-    res.status(201).json({
-        status: 'success',
-        message: "Academic years fetched successfully",
-        data: academicYears,
-    });
+    res.status(200).json(res.results);
 
 });
 

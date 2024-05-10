@@ -68,12 +68,8 @@ exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
  * @access      Private
  */
 exports.getAdminsCtrl = AsyncHandler(async (req, res) => {
-  const admins = await Admin.find();
-  res.status(200).json({
-    status: "success",
-    message: "Admins fetched successfully",
-    data: admins,
-  });
+
+  res.status(200).json(res.results);
 });
 /**
  * @description Get Admin Profile

@@ -47,13 +47,8 @@ exports.createSubject = AsyncHandler(async (req, res) => {
  * @access Private
  */
 exports.getSubjects = AsyncHandler(async (req, res) => {
-    const allSubjects = await Subject.find();
-
-    res.status(201).json({
-        status: 'success',
-        message: "Subject fetched successfully",
-        data: allSubjects,
-    });
+    
+    res.status(200).json(res.results);
 
 });
 

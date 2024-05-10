@@ -40,13 +40,8 @@ exports.createProgram = AsyncHandler(async (req, res) => {
  * @access Private
  */
 exports.getPrograms = AsyncHandler(async (req, res) => {
-    const allPrograms = await Program.find();
-
-    res.status(201).json({
-        status: 'success',
-        message: "Programs fetched successfully",
-        data: allPrograms,
-    });
+    
+    res.status(200).json(res.results);
 
 });
 

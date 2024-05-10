@@ -57,13 +57,8 @@ exports.createQuestion = AsyncHandler(async (req, res) => {
  * @access Private Teachers Only
  */
 exports.getQuestions = AsyncHandler(async (req, res) => {
-  const questions = await Question.find();
-
-  res.status(201).json({
-      status: 'success',
-      message: "Questions fetched successfully",
-      data: questions,
-  });
+  
+  res.status(200).json(res.results);
 
 });
 
