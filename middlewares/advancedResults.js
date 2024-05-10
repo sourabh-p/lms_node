@@ -4,7 +4,6 @@
 const advancedResults = (model, populate) => {
   // since req is here, we can use queries
   return async (req, res, next) => {
-    // console.log(req.res);
     let ModelQuery   = model.find(); // return all data via `query`, then do pagination using mongoose
     const page       = Number(req.query.page) || 1; // using number constructor, look for query params 'page'
     const limit      = Number(req.query.limit) || 2; // using number constructor, look for query params 'limit'
