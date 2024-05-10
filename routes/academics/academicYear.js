@@ -1,39 +1,34 @@
 const express = require("express");
-const { createAcademicYear, getAcademicYears, getAcademicYear, updateAcademicYear, deleteAcademicYear } = require("../../controller/academics/academicYearCtrl");
-const isAdmin = require("../../middlewares/isAdmin");
-const isLogin = require("../../middlewares/isLogin");
+const {
+  createAcademicYear,
+  getAcademicYears,
+  getAcademicYear,
+  updateAcademicYear,
+  deleteAcademicYear,
+} = require("../../controller/academics/academicYearCtrl");
 const { create } = require("../../model/Academic/AcademicYear");
 const AcademicYear = require("../../model/Academic/AcademicYear");
 const advancedResults = require("../../middlewares/advancedResults");
+const isAuthenticated = require("../../middlewares/isAuthenticated");
+const Admin = require("../../model/Staff/Admin");
+const roleRestriction = require("../../middlewares/roleRestriction");
 
 const academicYearRouter = express.Router();
 
-/**
- * Below is an example of route chaining in express. 
- * The commented code is how you would normally write
- * routes, but when chaining, it would look and function
- * as written.
- * 
- * old routes
- */
-// academicYearRouter.post("/", isLogin, isAdmin, createAcademicYear);
-// academicYearRouter.get("/", isLogin, isAdmin, getAcademicYears);
-// academicYearRouter.get("/:id", isLogin, isAdmin, getAcademicYear);
-// academicYearRouter.put("/:id", isLogin, isAdmin, updateAcademicYear);
-// academicYearRouter.delete("/:id", isLogin, isAdmin, deleteAcademicYear);
-
-/**
- * updated chained routes
- */
 academicYearRouter
   .route("/")
-  .post(isLogin, isAdmin, createAcademicYear)
-  .get(isLogin, isAdmin, advancedResults(AcademicYear),getAcademicYears);
+  .post(isAuthenticated(Admin), roleRestriction("admin"), createAcademicYear)
+  .get(
+    isAuthenticated(Admin),
+    roleRestriction("admin"),
+    advancedResults(AcademicYear),
+    getAcademicYears
+  );
 
 academicYearRouter
   .route("/:id")
-  .get(isLogin, isAdmin, getAcademicYear)
-  .put(isLogin, isAdmin, updateAcademicYear)
-  .delete(isLogin, isAdmin, deleteAcademicYear);
+  .get(isAuthenticated(Admin), roleRestriction("admin"), getAcademicYear)
+  .put(isAuthenticated(Admin), roleRestriction("admin"), updateAcademicYear)
+  .delete(isAuthenticated(Admin), roleRestriction("admin"), deleteAcademicYear);
 
 module.exports = academicYearRouter;

@@ -1,25 +1,67 @@
 const express = require("express");
-const isAdmin = require("../../middlewares/isAdmin");
-const isLogin = require("../../middlewares/isLogin");
-const { adminRegisterStudent, loginStudent, getStudentProfile, getAllStudentsByAdmin, getStudentByAdmin, studentUpdateProfile, adminUpdateStudent, writeExam } = require("../../controller/students/studentsCtrl");
-const isStudent = require("../../middlewares/isStudent");
-const isStudentLogin = require("../../middlewares/isStudentLogin");
+const {
+  adminRegisterStudent,
+  loginStudent,
+  getStudentProfile,
+  getAllStudentsByAdmin,
+  getStudentByAdmin,
+  studentUpdateProfile,
+  adminUpdateStudent,
+  writeExam,
+} = require("../../controller/students/studentsCtrl");
 const advancedResults = require("../../middlewares/advancedResults");
 const Student = require("../../model/Academic/Student");
 const isAuthenticated = require("../../middlewares/isAuthenticated");
+const roleRestriction = require("../../middlewares/roleRestriction");
+const Admin = require("../../model/Staff/Admin");
 
 const studentRouter = express.Router();
 
-studentRouter.post("/admin/register", isLogin, isAdmin, adminRegisterStudent);
+studentRouter.post(
+  "/admin/register",
+  isAuthenticated(Admin),
+  roleRestriction("admin"),
+  adminRegisterStudent
+);
 studentRouter.post("/login", loginStudent);
-studentRouter.get("/profile", isAuthenticated(Student), isStudent, getStudentProfile);
-studentRouter.get("/admin", isLogin, isAdmin, advancedResults(Student), getAllStudentsByAdmin);
-studentRouter.get("/:studentID/admin", isLogin, isAdmin, getStudentByAdmin);
+studentRouter.get(
+  "/profile",
+  isAuthenticated(Student),
+  roleRestriction("student"),
+  getStudentProfile
+);
+studentRouter.get(
+  "/admin",
+  isAuthenticated(Admin),
+  roleRestriction("admin"),
+  advancedResults(Student),
+  getAllStudentsByAdmin
+);
+studentRouter.get(
+  "/:studentID/admin",
+  isAuthenticated(Admin),
+  roleRestriction("admin"),
+  getStudentByAdmin
+);
 /** Students taking exams can access following: */
-studentRouter.post("/exams/:examID/write", isAuthenticated(Student), isStudent, writeExam); // Student only writes exams
+studentRouter.post(
+  "/exams/:examID/write",
+  isAuthenticated(Student),
+  roleRestriction("student"),
+  writeExam
+); // Student only writes exams
 /** */
-studentRouter.put("/update", isAuthenticated(Student), isStudent, studentUpdateProfile);       // student only
-studentRouter.put("/:studentID/update/admin", isLogin, isAdmin, adminUpdateStudent); // Admin only
-
+studentRouter.put(
+  "/update",
+  isAuthenticated(Student),
+  roleRestriction("student"),
+  studentUpdateProfile
+); // student only
+studentRouter.put(
+  "/:studentID/update/admin",
+  isAuthenticated(Admin),
+  roleRestriction("admin"),
+  adminUpdateStudent
+); // Admin only
 
 module.exports = studentRouter;

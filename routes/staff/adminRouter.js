@@ -5,7 +5,6 @@ const {
   getAdminsCtrl,
   getAdminProfileCtrl,
   updateAdminCtrl,
-  deleteAdminCtrl,
   adminSuspendTeacherCtrl,
   adminUnsuspendteacherCtrl,
   adminWithdrawTeacherCtrl,
@@ -14,11 +13,10 @@ const {
   adminUnpublishResultsCtrl,
 } = require("../../controller/staff/adminCtrl");
 
-const isLogin = require("../../middlewares/isLogin");
-const isAdmin = require("../../middlewares/isAdmin");
 const Admin = require("../../model/Staff/Admin");
 const advancedResults = require("../../middlewares/advancedResults");
 const isAuthenticated = require("../../middlewares/isAuthenticated");
+const roleRestriction = require("../../middlewares/roleRestriction");
 const adminRouter = express.Router();
 
 /**
@@ -34,7 +32,12 @@ adminRouter.post("/login", loginAdminCtrl);
 /**
  * Get All Admin
  */
-adminRouter.get("/", isLogin, advancedResults(Admin), getAdminsCtrl);
+adminRouter.get(
+  "/",
+  isAuthenticated(Admin),
+  advancedResults(Admin),
+  getAdminsCtrl
+);
 
 /**
  * Single Admin
@@ -42,14 +45,19 @@ adminRouter.get("/", isLogin, advancedResults(Admin), getAdminsCtrl);
 adminRouter.get(
   "/profile",
   isAuthenticated(Admin),
-  isAdmin,
+  roleRestriction("admin"),
   getAdminProfileCtrl
 );
 
 /**
  * Update Admin
  */
-adminRouter.put("/", isLogin, isAdmin, updateAdminCtrl);
+adminRouter.put(
+  "/",
+  isAuthenticated(Admin),
+  roleRestriction("admin"),
+  updateAdminCtrl
+);
 
 /**
  * Suspend Teacher
