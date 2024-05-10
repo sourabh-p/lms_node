@@ -80,7 +80,7 @@ To start the application, you can use the following npm scripts defined in the p
 `npm run server`
 
 ## Setting up Postman
-The API is built using Express.js and serves a RESTful JSON API. You can interact with it through a tool like Postman. I will provide the public API for my postman collection for this project if you would like to pull it. https://api.postman.com/collections/928864-29863997-1471-4c2e-80ad-6f07cbcbf9f5?access_key=PMAT-01HXG7QF6APGQSX7Y0R8B5J30T
+The API is built using Express.js and serves a RESTful JSON API. You can interact with it through a tool like Postman. I will provide the public API for my postman collection for this project if you would like to pull it.
 
 ## Setting up MongoDB
 To set up your MongoDB environment, you can either install MongoDB locally or use a MongoDB cloud service like MongoDB Atlas.
